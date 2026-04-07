@@ -431,7 +431,7 @@
                                                                                 <strong>
                                                                                     <asp:Label ID="Label6" runat="server" Text="Region" Width="58px"></asp:Label></strong>
                                                                             </td>
-                                                                            <td align="left" style="height: 16px">
+                                                                            <td align="left">
                                                                                 <asp:DropDownList ID="DrpTownRegion" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DrpTownRegion_SelectedIndexChanged" Width="200px">
                                                                                 </asp:DropDownList>
                                                                             </td>

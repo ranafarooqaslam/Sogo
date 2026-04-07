@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <AppSettings>
 
-  <Server>cornl.faastdemo.com</Server>
-  <DBName>SOGOTest</DBName>
-  <DBUser>Ali</DBUser>
-  <DBPassword>Ali@Fast1234#</DBPassword>
+  <Server>samsl.faastdemo.com</Server>
+  <DBName>SSJEnterprises</DBName>
+  <DBUser>app</DBUser>
+  <DBPassword>Fast12341234</DBPassword>
   <DBAuthentication>MSDE</DBAuthentication>
   
 </AppSettings>

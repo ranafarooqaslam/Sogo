@@ -72,15 +72,7 @@ public partial class Forms_frmGeoHierarchyData : System.Web.UI.Page
     /// </summary>
     /// <param name="sender">object</param>
     /// <param name="e">GridViewEditEventArgs</param>
-    protected void grdRegionData_RowEditing(object sender, GridViewEditEventArgs e)
-    {
-        RegionId = int.Parse(grdRegionData.Rows[e.NewEditIndex].Cells[0].Text);
-        txtRegionCode.Text = grdRegionData.Rows[e.NewEditIndex].Cells[1].Text;
-        txtRegionName.Text = grdRegionData.Rows[e.NewEditIndex].Cells[2].Text;
-        ChIsActive.Checked = bool.Parse(grdRegionData.Rows[e.NewEditIndex].Cells[3].Text);
-        btnRegionSave.Text = "Update";
-    }
-
+    
     protected void grdRegionData_RowCommand(object sender, GridViewCommandEventArgs e)
     {
         if (e.CommandName.ToLower() == "edt")
@@ -91,6 +83,7 @@ public partial class Forms_frmGeoHierarchyData : System.Web.UI.Page
             txtRegionCode.Text = grdRegionData.Rows[index].Cells[1].Text;
             txtRegionName.Text = grdRegionData.Rows[index].Cells[2].Text;
             ChIsActive.Checked = bool.Parse(grdRegionData.Rows[index].Cells[3].Text);
+            btnRegionSave.Text = "Update";
         }
     }
     /// <summary>
@@ -162,15 +155,7 @@ public partial class Forms_frmGeoHierarchyData : System.Web.UI.Page
     /// Sets Zone Tab Data For Edit. This Function Runs When An Existing Zone Needs To Be Edited
     /// </summary>
     /// <param name="sender">object</param>
-    /// <param name="e">GridViewEditEventArgs</param>
-    protected void grdZoneData_RowEditing(object sender, GridViewEditEventArgs e)
-    {
-        ZoneId = int.Parse(grdZoneData.Rows[e.NewEditIndex].Cells[1].Text);
-        txtZoneCode.Text = grdZoneData.Rows[e.NewEditIndex].Cells[2].Text;
-        txtZoneName.Text = grdZoneData.Rows[e.NewEditIndex].Cells[3].Text;
-        chbIsZoneActive.Checked = bool.Parse(grdZoneData.Rows[e.NewEditIndex].Cells[4].Text);
-        btnSaveZone.Text = "Update";
-    }
+    /// <param name="e">GridViewEditEventArgs</param>    
 
     protected void grdZoneData_RowCommand(object sender, GridViewCommandEventArgs e)
     {
@@ -182,6 +167,7 @@ public partial class Forms_frmGeoHierarchyData : System.Web.UI.Page
             txtZoneCode.Text = grdZoneData.Rows[index].Cells[2].Text;
             txtZoneName.Text = grdZoneData.Rows[index].Cells[3].Text;
             chbIsZoneActive.Checked = bool.Parse(grdZoneData.Rows[index].Cells[4].Text);
+            btnSaveZone.Text = "Update";
         }
     }
     /// <summary>
@@ -291,16 +277,7 @@ public partial class Forms_frmGeoHierarchyData : System.Web.UI.Page
     /// Sets Territory Tab Data For Edit. This Function Runs When An Existing Territory Needs To Be Edited
     /// </summary>
     /// <param name="sender">object</param>
-    /// <param name="e">GridViewEditEventArgs</param>
-    protected void grdTerritoryData_RowEditing(object sender, GridViewEditEventArgs e)
-    {
-        TerritoryId = int.Parse(grdTerritoryData.Rows[e.NewEditIndex].Cells[1].Text);
-        txtTerritoryCode.Text = grdTerritoryData.Rows[e.NewEditIndex].Cells[2].Text;
-        txtTerritoryName.Text = grdTerritoryData.Rows[e.NewEditIndex].Cells[3].Text;
-        chbIsTerritoryActive.Checked = bool.Parse(grdTerritoryData.Rows[e.NewEditIndex].Cells[4].Text);
-        btnSaveTerritory.Text = "Update";
-    }
-
+    /// <param name="e">GridViewEditEventArgs</param>    
     protected void grdTerritoryData_RowCommand(object sender, GridViewCommandEventArgs e)
     {
         if (e.CommandName.ToLower() == "edt")
@@ -431,16 +408,7 @@ public partial class Forms_frmGeoHierarchyData : System.Web.UI.Page
     /// Sets Town Tab Data For Edit. This Function Runs When An Existing Town Needs To Be Edited
     /// </summary>
     /// <param name="sender">object</param>
-    /// <param name="e">GridViewEditEventArgs</param>
-    protected void grdTownData_RowEditing(object sender, GridViewEditEventArgs e)
-    {
-        TownId = int.Parse(grdTownData.Rows[e.NewEditIndex].Cells[1].Text);
-        txtTownCode.Text = grdTownData.Rows[e.NewEditIndex].Cells[2].Text;
-        txtTownName.Text = grdTownData.Rows[e.NewEditIndex].Cells[3].Text;
-        chbIsTownActive.Checked = bool.Parse(grdTownData.Rows[e.NewEditIndex].Cells[4].Text);
-        btnSaveTown.Text = "Update";
-    }
-
+    /// <param name="e">GridViewEditEventArgs</param>    
     protected void grdTownData_RowCommand(object sender, GridViewCommandEventArgs e)
     {
         if (e.CommandName.ToLower() == "edt")
