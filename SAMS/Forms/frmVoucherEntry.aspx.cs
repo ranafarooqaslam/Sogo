@@ -55,7 +55,7 @@ public partial class Forms_frmVoucherEntry : System.Web.UI.Page
             AccountHeadController mAccountController = new AccountHeadController();
             DataTable dt = mAccountController.SelectAccountHead(Constants.AC_AccountHeadId, long.Parse(SAMSCommon.Classes.Configuration.BankDefaultType));
             clsWebFormUtil.FillDropDownList(drpBanks, dt, 0, 4, true);
-            if (dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "Corporate Brands")
+            if (dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "Corporate Brands" || dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "SSJ Enterprises")
             {
                 try
                 {

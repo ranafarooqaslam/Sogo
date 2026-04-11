@@ -162,45 +162,15 @@ public partial class Forms_frmCustomerRelization : System.Web.UI.Page
             DrpAccountDetail.Items.Clear();
             DocumentPrintController DPrint = new DocumentPrintController();
             DataTable dtCompany = DPrint.SelectReportTitle(int.Parse(drpDistributor.SelectedValue.ToString()));
-            //if (dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "Corporate Brands")
-            //{                
-            //    if (drpDistributor.SelectedValue == "2")
-            //    {
-            //        SAMSCommon.Classes.Configuration.GetAccountHead();
-            //        AccountHeadController mAccountController = new AccountHeadController();
-            //        DataTable dt = mAccountController.SelectAccountHead(Constants.AC_AccountHeadId,
-            //            long.Parse(SAMSCommon.Classes.Configuration.BankDefaultType));
-            //        clsWebFormUtil.FillDropDownList(DrpAccountDetail, dt, 0, 4);
-            //    }
-            //    else if (drpDistributor.SelectedValue == "1")
-            //    {
-            //        DrpAccountDetail.Items.Add(new ListItem("Agha BANK CB", "868"));
-            //        DrpAccountDetail.Items.Add(new ListItem(".New Habib Metro", "666"));
-            //        DrpAccountDetail.Items.Add(new ListItem("BAHL", "599"));
-            //        DrpAccountDetail.Items.Add(new ListItem("Meezan", "138"));                    
-            //        DrpAccountDetail.Items.Add(new ListItem("Agha BANK H.O.", "971"));
-            //    }
-            //    else if (drpDistributor.SelectedValue == "4")
-            //    {
-            //        DrpAccountDetail.Items.Add(new ListItem("AA Bank Account", "835"));
-            //    }
-            //    else if (drpDistributor.SelectedValue == "3")
-            //    {
-            //        DrpAccountDetail.Items.Add(new ListItem("Tip Top Bank A/C", "834"));
-            //    }
-            //}
-            //else
-            //{
-                SAMSCommon.Classes.Configuration.GetAccountHead();
-                AccountHeadController mAccountController = new AccountHeadController();
-                DataTable dt = mAccountController.SelectAccountHead(Constants.AC_AccountHeadId,
-                    long.Parse(SAMSCommon.Classes.Configuration.BankDefaultType));
-                clsWebFormUtil.FillDropDownList(DrpAccountDetail, dt, 0, 4);
-            if (dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "Corporate Brands")
+            SAMSCommon.Classes.Configuration.GetAccountHead();
+            AccountHeadController mAccountController = new AccountHeadController();
+            DataTable dt = mAccountController.SelectAccountHead(Constants.AC_AccountHeadId,
+                long.Parse(SAMSCommon.Classes.Configuration.BankDefaultType));
+            clsWebFormUtil.FillDropDownList(DrpAccountDetail, dt, 0, 4);
+            if (dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "Corporate Brands" || dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "SSJ Enterprises")
             {
                 DrpAccountDetail.SelectedValue = "868";
             }
-            //}
         }
         else
         {
