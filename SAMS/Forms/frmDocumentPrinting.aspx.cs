@@ -27,7 +27,7 @@ public partial class Forms_frmDocumentPrinting : System.Web.UI.Page
             LoadChannelType();
             dtCompany = DPrint.SelectReportTitle(int.Parse(drpDistributor.SelectedValue.ToString()));
             DrpLedgerType.Items.Add(new ListItem("Sales Invoice", "1"));
-            if (dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "Corporate Brands")
+            if (dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "Corporate Brands" || dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "SSJ Enterprises")
             {
                 DrpLedgerType.Items.Add(new ListItem("Sales Invoice(New)", "5"));
             }
@@ -218,7 +218,7 @@ public partial class Forms_frmDocumentPrinting : System.Web.UI.Page
                     else
                     {
 
-                        if (dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "Corporate Brands")
+                        if (dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "Corporate Brands" || dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "SSJ Enterprises")
                         {
                             CrpReport = new SAMSBusinessLayer.Reports.CrpPrintDocument();
                         }
