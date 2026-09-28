@@ -162,6 +162,11 @@ public partial class Forms_frmDocumentPrinting : System.Web.UI.Page
         else {
             btnViewPdfWithLedgerBal.Visible = false;
         }
+        rowDiscountPer.Visible = false;
+        if(DrpLedgerType.SelectedValue == "1")
+        {
+            rowDiscountPer.Visible = true;
+        }
     }
 
     /// <summary>
@@ -220,7 +225,14 @@ public partial class Forms_frmDocumentPrinting : System.Web.UI.Page
 
                         if (dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "Corporate Brands" || dtCompany.Rows[0]["COMPANY_NAME"].ToString() == "SSJ Enterprises")
                         {
-                            CrpReport = new SAMSBusinessLayer.Reports.CrpPrintDocument();
+                            if(cbDiscountPer.Checked)
+                            {
+                                CrpReport = new SAMSBusinessLayer.Reports.CrpPrintDocument();
+                            }
+                            else
+                            {
+                                CrpReport = new SAMSBusinessLayer.Reports.CrpPrintDocument2();
+                            }
                         }
                         else
 

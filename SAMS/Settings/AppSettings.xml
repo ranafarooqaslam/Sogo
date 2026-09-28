@@ -2,9 +2,9 @@
 <AppSettings>
 
   <Server>samsl.faastdemo.com</Server>
-  <DBName>SSJEnterprises</DBName>
-  <DBUser>app</DBUser>
-  <DBPassword>Fast12341234</DBPassword>
+  <DBName>SOGOTest</DBName>
+  <DBUser>saqib</DBUser>
+  <DBPassword>myFast1234**</DBPassword>
   <DBAuthentication>MSDE</DBAuthentication>
   
 </AppSettings>
