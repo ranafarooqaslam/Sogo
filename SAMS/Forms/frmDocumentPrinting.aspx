@@ -195,7 +195,7 @@
                                                     <td></td>
                                                     <td>
                                                         <strong>
-                                                            <asp:Label ID="Label9" runat="server" Text="Shwo Discount %"
+                                                            <asp:Label ID="Label9" runat="server" Text="Show Only Discount %"
                                                                 Width="78px"></asp:Label>
                                                         </strong>
                                                     </td>
