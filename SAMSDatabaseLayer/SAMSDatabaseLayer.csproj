@@ -91,6 +91,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SAMSCommon\bin\Debug\SAMSCommon.dll</HintPath>
     </Reference>
+    <Reference Include="SAMSDataAccessLayer, Version=1.0.9805.20764, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SAMSDataAccessLayer\bin\Debug\SAMSDataAccessLayer.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -1065,12 +1069,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="OutPutsClasses\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SAMSDataAccessLayer\SAMSDataAccessLayer.csproj">
-      <Project>{26D8191C-6D6A-4457-BD84-41F5DFAAF9C2}</Project>
-      <Name>SAMSDataAccessLayer</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
