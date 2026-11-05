@@ -205,7 +205,7 @@ public partial class Forms_frmOpeingCredit : System.Web.UI.Page
         hfPrincipalID.Value = GrdOrder.Rows[e.NewEditIndex].Cells[1].Text;
         hfCustomerID.Value = GrdOrder.Rows[e.NewEditIndex].Cells[0].Text;
         hfSaleInvoiceID.Value = GrdOrder.Rows[e.NewEditIndex].Cells[10].Text;
-
+        txtRemarks.Text = GrdOrder.Rows[e.NewEditIndex].Cells[11].Text;
     }
 
     /// <summary>
@@ -266,7 +266,7 @@ public partial class Forms_frmOpeingCredit : System.Web.UI.Page
 
                 LedgerCtl.OpeningCredit(int.Parse(drpDistributor.SelectedValue.ToString()), txtChequeNo.Text.ToUpper(), int.Parse(foundRows[0]["TOWN_ID"].ToString()), int.Parse(DrpRoute.SelectedValue.ToString()),
                 DateTime.Parse(txtFromdate.Text), int.Parse(DrpPrincipal.SelectedValue.ToString()), long.Parse(foundRows[0]["CUSTOMER_ID"].ToString()), long.Parse(foundRows[0]["CUSTOMER_ID"].ToString()),
-                -1, int.Parse(DrpDeliveryMan.SelectedValue.ToString()), decimal.Parse(txtAmount.Text), int.Parse(this.Session["UserId"].ToString()), int.Parse(DrpCreditType.SelectedValue.ToString()));
+                -1, int.Parse(DrpDeliveryMan.SelectedValue.ToString()), decimal.Parse(txtAmount.Text), int.Parse(this.Session["UserId"].ToString()), int.Parse(DrpCreditType.SelectedValue.ToString()),txtRemarks.Text);
                 this.ClearAll();
                 this.LoadOpeningCredit();
             }

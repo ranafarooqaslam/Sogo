@@ -2030,7 +2030,7 @@ namespace SAMSBusinessLayer.Classes
         /// <param name="p_UserId">InsertedBy</param>
         /// <param name="p_CreditType">Type</param>
         /// <returns>True On Success And False On Failure</returns>
-        public bool OpeningCredit(int p_Distributor_id, string p_MANUAL_SALE_ID, int p_TOWN_ID, long p_AREA_ID, DateTime p_DocumentDate, int p_PRINCIPAL_ID, long p_SOLD_TO, long p_SHIP_TO, int p_ORDERBOOKER_ID, int p_DELIVERYMAN_ID, decimal p_TOTAL_NET_AMOUNT, int p_UserId, int p_CreditType)
+        public bool OpeningCredit(int p_Distributor_id, string p_MANUAL_SALE_ID, int p_TOWN_ID, long p_AREA_ID, DateTime p_DocumentDate, int p_PRINCIPAL_ID, long p_SOLD_TO, long p_SHIP_TO, int p_ORDERBOOKER_ID, int p_DELIVERYMAN_ID, decimal p_TOTAL_NET_AMOUNT, int p_UserId, int p_CreditType,string p_REMARKS)
         {
 
             IDbConnection mConnection = null;
@@ -2067,13 +2067,24 @@ namespace SAMSBusinessLayer.Classes
                 mISom.LEGEND_ID = p_CreditType;
                 mISom.ExecuteQuery();
 
+                if (p_REMARKS.Length > 0)
+                {
+                    uspInsertInvoiceRemarks mRemarks = new uspInsertInvoiceRemarks();
+                    mRemarks.Connection = mConnection;
+                    mRemarks.Transaction = mTransaction;
+                    mRemarks.INVOICE_MASTER_ID = mISom.SALE_INVOICE_ID;
+                    mRemarks.REMARKS = p_REMARKS;
+                    mRemarks.TYPE_ID = Constants.Document_Invoice;
+                    mRemarks.ExecuteQuery();
+                }
+
                 #region Account Posting
 
                 LedgerController LController = new LedgerController();
                 Configuration.GetAccountHead();
                 string VoucherNo = LController.SelectLedgerMaxDocumentId(Constants.Journal_Voucher, p_Distributor_id);
-                LController.PostingInvoiceAccount(Constants.Journal_Voucher, long.Parse(VoucherNo), long.Parse(Configuration.AccountReceivable), p_Distributor_id, p_TOTAL_NET_AMOUNT, 0, mISom.DOCUMENT_DATE, "CASH Sale Default", DateTime.Now, p_PRINCIPAL_ID, int.Parse(p_SOLD_TO.ToString()), mISom.SALE_INVOICE_ID, mISom.MANUAL_INVOICE_ID, Constants.Document_SaleInvoice, p_UserId, mTransaction, mConnection, p_CreditType, p_DELIVERYMAN_ID.ToString(),0);
-                LController.PostingInvoiceAccount(Constants.Journal_Voucher, long.Parse(VoucherNo), long.Parse(Configuration.SaleAccount), p_Distributor_id, 0, p_TOTAL_NET_AMOUNT, mISom.DOCUMENT_DATE, "Sale Default", DateTime.Now, p_PRINCIPAL_ID, int.Parse(p_SOLD_TO.ToString()), mISom.SALE_INVOICE_ID, mISom.MANUAL_INVOICE_ID, Constants.Document_SaleInvoice, p_UserId, mTransaction, mConnection, p_CreditType, p_DELIVERYMAN_ID.ToString(),0);
+                LController.PostingInvoiceAccount(Constants.Journal_Voucher, long.Parse(VoucherNo), long.Parse(Configuration.AccountReceivable), p_Distributor_id, p_TOTAL_NET_AMOUNT, 0, mISom.DOCUMENT_DATE, "Opening Credit " + p_REMARKS, DateTime.Now, p_PRINCIPAL_ID, int.Parse(p_SOLD_TO.ToString()), mISom.SALE_INVOICE_ID, mISom.MANUAL_INVOICE_ID, Constants.Document_SaleInvoice, p_UserId, mTransaction, mConnection, p_CreditType, p_DELIVERYMAN_ID.ToString(),0);
+                LController.PostingInvoiceAccount(Constants.Journal_Voucher, long.Parse(VoucherNo), long.Parse(Configuration.SaleAccount), p_Distributor_id, 0, p_TOTAL_NET_AMOUNT, mISom.DOCUMENT_DATE, "Opening Credit " + p_REMARKS, DateTime.Now, p_PRINCIPAL_ID, int.Parse(p_SOLD_TO.ToString()), mISom.SALE_INVOICE_ID, mISom.MANUAL_INVOICE_ID, Constants.Document_SaleInvoice, p_UserId, mTransaction, mConnection, p_CreditType, p_DELIVERYMAN_ID.ToString(),0);
 
                 #endregion
 

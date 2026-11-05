@@ -348,6 +348,10 @@
                                                     <HeaderStyle CssClass="HidePanel"></HeaderStyle>
                                                     <ItemStyle CssClass="HidePanel"></ItemStyle>
                                                 </asp:BoundField>
+                                                <asp:BoundField DataField="REMARKS">
+                                                    <HeaderStyle CssClass="HidePanel"></HeaderStyle>
+                                                    <ItemStyle CssClass="HidePanel"></ItemStyle>
+                                                </asp:BoundField>
                                                 <asp:CommandField ShowEditButton="True" ShowHeader="True" HeaderText="Edit"></asp:CommandField>
                                                 <asp:TemplateField HeaderText="Delete">
                                                     <ItemTemplate>
