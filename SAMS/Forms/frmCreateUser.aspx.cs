@@ -149,11 +149,11 @@ public partial class Forms_frmCreateUser : System.Web.UI.Page
                     lblErrorMsg.Text = "LoginId Already Exist";
                     return;
                 }
-                UController.InsertSlashUser(int.Parse(DrpUser.SelectedValue.ToString()), int.Parse(this.Session["CompanyId"].ToString()), int.Parse(ddDistributorId.SelectedValue.ToString()), txtLoginId.Text, txtpassword.Text, int.Parse(ddRole.SelectedValue.ToString()), InvoiceType);
+                UController.InsertSlashUser(int.Parse(DrpUser.SelectedValue.ToString()), int.Parse(this.Session["CompanyId"].ToString()), int.Parse(ddDistributorId.SelectedValue.ToString()), txtLoginId.Text, txtpassword.Text, int.Parse(ddRole.SelectedValue.ToString()), InvoiceType,cblEditOldRecords.Items[0].Selected,cblEditOldRecords.Items[1].Selected, cblEditOldRecords.Items[2].Selected);
             }
             else if (btnSave.Text == "Update")
             {
-                UController.UpdateUser(int.Parse(DrpUser.SelectedValue.ToString()), int.Parse(this.Session["CompanyId"].ToString()), txtLoginId.Text, txtpassword.Text, int.Parse(ddRole.SelectedValue.ToString()), chkIsActive.Checked, int.Parse(ddDistributorId.SelectedValue.ToString()),InvoiceType);
+                UController.UpdateUser(int.Parse(DrpUser.SelectedValue.ToString()), int.Parse(this.Session["CompanyId"].ToString()), txtLoginId.Text, txtpassword.Text, int.Parse(ddRole.SelectedValue.ToString()), chkIsActive.Checked, int.Parse(ddDistributorId.SelectedValue.ToString()),InvoiceType, cblEditOldRecords.Items[0].Selected, cblEditOldRecords.Items[1].Selected, cblEditOldRecords.Items[2].Selected);
             }
             LoadGrid();
             ClearControls();
@@ -199,6 +199,10 @@ public partial class Forms_frmCreateUser : System.Web.UI.Page
             {
                 li.Selected = true;
             }
+            foreach(ListItem LI in cblEditOldRecords.Items)
+            {
+                LI.Selected = false;
+            }
         }
         catch (Exception ex)
         {
@@ -213,6 +217,10 @@ public partial class Forms_frmCreateUser : System.Web.UI.Page
             foreach(ListItem li in cblInvoiceType.Items)
             {
                 li.Selected = false;
+            }
+            foreach (ListItem LI in cblEditOldRecords.Items)
+            {
+                LI.Selected = false;
             }
             GridViewRow row = (GridViewRow)(((LinkButton)e.CommandSource).NamingContainer);
             int index = row.RowIndex;
@@ -237,6 +245,9 @@ public partial class Forms_frmCreateUser : System.Web.UI.Page
                         }
                     }
                 }
+                cblEditOldRecords.Items[0].Selected = Convert.ToBoolean(gvr.Cells[10].Text);
+                cblEditOldRecords.Items[1].Selected = Convert.ToBoolean(gvr.Cells[11].Text);
+                cblEditOldRecords.Items[2].Selected = Convert.ToBoolean(gvr.Cells[12].Text);
                 btnSave.Text = "Update";
             }
             catch (Exception ex)

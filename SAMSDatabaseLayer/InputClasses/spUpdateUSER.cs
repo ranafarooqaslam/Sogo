@@ -22,6 +22,9 @@ namespace SAMSDatabaseLayer.Classes
         private string m_LOGIN_ID;
         private string m_PASSWORD;
         private string m_InvoiceType;
+        private bool m_CanEditOldSale;
+        private bool m_CanEditOldSaleReturn;
+        private bool m_CanEditOldPurchase;
         #endregion
 
         #region Public Properties
@@ -134,6 +137,23 @@ namespace SAMSDatabaseLayer.Classes
             get { return m_InvoiceType; }
         }
 
+        public bool CanEditOldSale
+        {
+            set { m_CanEditOldSale = value; }
+            get { return m_CanEditOldSale; }
+        }
+
+        public bool CanEditOldSaleReturn
+        {
+            set { m_CanEditOldSaleReturn = value; }
+            get { return m_CanEditOldSaleReturn; }
+        }
+
+        public bool CanEditOldPurchase
+        {
+            set { m_CanEditOldPurchase = value; }
+            get { return m_CanEditOldPurchase; }
+        }
 
         public IDbConnection Connection
         {
@@ -384,6 +404,23 @@ namespace SAMSDatabaseLayer.Classes
             parameter.Value = m_IS_ACTIVE;
             pparams.Add(parameter);
 
+            parameter = ProviderFactory.GetParameter(EnumProviders.SQLClient);
+            parameter.ParameterName = "@CanEditOldSale";
+            parameter.DbType = ProviderFactory.GetDBType(EnumProviders.SQLClient, EnumDBTypes.Bit);
+            parameter.Value = m_CanEditOldSale;
+            pparams.Add(parameter);
+
+            parameter = ProviderFactory.GetParameter(EnumProviders.SQLClient);
+            parameter.ParameterName = "@CanEditOldSaleReturn";
+            parameter.DbType = ProviderFactory.GetDBType(EnumProviders.SQLClient, EnumDBTypes.Bit);
+            parameter.Value = m_CanEditOldSaleReturn;
+            pparams.Add(parameter);
+
+            parameter = ProviderFactory.GetParameter(EnumProviders.SQLClient);
+            parameter.ParameterName = "@CanEditOldPurchase";
+            parameter.DbType = ProviderFactory.GetDBType(EnumProviders.SQLClient, EnumDBTypes.Bit);
+            parameter.Value = m_CanEditOldPurchase;
+            pparams.Add(parameter);
 
             parameter = ProviderFactory.GetParameter(EnumProviders.SQLClient);
             parameter.ParameterName = "@LOGIN_ID";

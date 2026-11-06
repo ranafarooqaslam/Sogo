@@ -278,7 +278,7 @@ namespace SAMSBusinessLayer.Classes
         /// <param name="p_Password">Password</param>
         /// <param name="p_RoleId">Role</param>
         /// <returns>Inserted User ID as String</returns>
-		public string InsertSlashUser(int User_Id,int p_CompanyId,int p_DistributorId,string p_LoginId , string p_Password, int p_RoleId,string p_InvoiceType)
+		public string InsertSlashUser(int User_Id,int p_CompanyId,int p_DistributorId,string p_LoginId , string p_Password, int p_RoleId,string p_InvoiceType,bool p_CanEditOldSale,bool p_CanEditOldSaleReturn,bool p_CanEditOldPurchase)
 		{
 			IDbConnection mConnection = null;
 			try
@@ -295,6 +295,9 @@ namespace SAMSBusinessLayer.Classes
                 mSlashUser.ROLE_ID = p_RoleId;
 				mSlashUser.LASTUPDATE_DATE =  System.DateTime.Today;
                 mSlashUser.InvoiceType = p_InvoiceType;
+                mSlashUser.CanEditOldSale = p_CanEditOldSale;
+                mSlashUser.CanEditOldSaleReturn = p_CanEditOldSaleReturn;
+                mSlashUser.CanEditOldPurchase = p_CanEditOldPurchase;
                 mSlashUser.ExecuteQuery();
 				return mSlashUser.USER_ID.ToString ();
 				
@@ -369,7 +372,7 @@ namespace SAMSBusinessLayer.Classes
         /// <param name="p_IsActive">IsActive</param>
         /// <param name="p_DistributorID">Location</param>
         /// <returns>"Record Updated" On Success And Exception.Message on Failure</returns>
-        public string UpdateUser(int p_UserId,int p_CompanyId,string p_LoginId , string p_Password, int p_RoleId, bool p_IsActive, int p_DistributorID,string p_InvoiceType)
+        public string UpdateUser(int p_UserId,int p_CompanyId,string p_LoginId , string p_Password, int p_RoleId, bool p_IsActive, int p_DistributorID,string p_InvoiceType, bool p_CanEditOldSale, bool p_CanEditOldSaleReturn, bool p_CanEditOldPurchase)
 		{
 			IDbConnection mConnection = null;
 			try
@@ -387,6 +390,9 @@ namespace SAMSBusinessLayer.Classes
 				mSlashUser.IS_ACTIVE = p_IsActive;
                 mSlashUser.LASTUPDATE_DATE =  System.DateTime.Today;
                 mSlashUser.InvoiceType = p_InvoiceType;
+                mSlashUser.CanEditOldSale = p_CanEditOldSale;
+                mSlashUser.CanEditOldSaleReturn = p_CanEditOldSaleReturn;
+                mSlashUser.CanEditOldPurchase = p_CanEditOldPurchase;
                 mSlashUser.ExecuteQuery();
 				return "Record Updated";
 			}

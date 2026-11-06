@@ -83,6 +83,18 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td style="width: 98px">
+                                                <strong>
+                                                    <asp:Label ID="Label5" runat="server" Text="Can Edit Old"></asp:Label></strong></td>
+                                            <td>
+                                                <asp:CheckBoxList ID="cblEditOldRecords" runat="server" RepeatDirection="Horizontal">
+                                                    <asp:ListItem Text="Sales Invoice" Value="1" Selected="False"></asp:ListItem>
+                                                    <asp:ListItem Text="Sale Return" Value="2" Selected="False"></asp:ListItem>
+                                                    <asp:ListItem Text="Purchase" Value="3" Selected="False"></asp:ListItem>
+                                                </asp:CheckBoxList>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td style="width: 98px">&nbsp; </td>
                                             <td>
                                                 <asp:CheckBox ID="chkIsActive" runat="server" Width="93px" Text="IsActive" Checked="True"></asp:CheckBox></td>
@@ -170,6 +182,18 @@
                                     <ItemStyle CssClass="HidePanel"></ItemStyle>
                                 </asp:BoundField>
                                 <asp:BoundField DataField="InvoiceType" HeaderText="InvoiceType">
+                                    <HeaderStyle CssClass="HidePanel"></HeaderStyle>
+                                    <ItemStyle CssClass="HidePanel"></ItemStyle>
+                                </asp:BoundField>
+                                <asp:BoundField DataField="CanEditOldSale">
+                                    <HeaderStyle CssClass="HidePanel"></HeaderStyle>
+                                    <ItemStyle CssClass="HidePanel"></ItemStyle>
+                                </asp:BoundField>
+                                <asp:BoundField DataField="CanEditOldSaleReturn">
+                                    <HeaderStyle CssClass="HidePanel"></HeaderStyle>
+                                    <ItemStyle CssClass="HidePanel"></ItemStyle>
+                                </asp:BoundField>
+                                <asp:BoundField DataField="CanEditOldPurchase">
                                     <HeaderStyle CssClass="HidePanel"></HeaderStyle>
                                     <ItemStyle CssClass="HidePanel"></ItemStyle>
                                 </asp:BoundField>

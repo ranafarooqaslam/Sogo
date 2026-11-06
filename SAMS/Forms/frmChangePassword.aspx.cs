@@ -47,7 +47,7 @@ public partial class Forms_fmChangePassword : System.Web.UI.Page
             dtLogin_ID = UserInfo.SelectSlashUser(Convert.ToInt32(Session["UserID"].ToString()));
             if (this.txtCurrentPassword.Text == dtLogin_ID.Rows[0]["PASSWORD"].ToString())
             {
-                UserInfo.UpdateUser(Convert.ToInt32(Session["UserID"].ToString()), Convert.ToInt32(Session["CompanyId"]), dtLogin_ID.Rows[0]["LOGIN_ID"].ToString(), this.txtConfirmNewPassword.Text, Constants.IntNullValue, true, Convert.ToInt32(Session["DISTRIBUTOR_ID"].ToString()),null);
+                UserInfo.UpdateUser(Convert.ToInt32(Session["UserID"].ToString()), Convert.ToInt32(Session["CompanyId"]), dtLogin_ID.Rows[0]["LOGIN_ID"].ToString(), this.txtConfirmNewPassword.Text, Constants.IntNullValue, true, Convert.ToInt32(Session["DISTRIBUTOR_ID"].ToString()),null,Convert.ToBoolean(dtLogin_ID.Rows[0]["CanEditOldSale"]), Convert.ToBoolean(dtLogin_ID.Rows[0]["CanEditOldSaleReturn"]), Convert.ToBoolean(dtLogin_ID.Rows[0]["CanEditOldPurchase"]));
                 return true;
             }
             else 
