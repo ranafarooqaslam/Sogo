@@ -1,7 +1,5 @@
 <%@ Page Language="C#" MasterPageFile="~/Forms/PageMaster.master" AutoEventWireup="true"
     CodeFile="frmOrderEntryOld.aspx.cs" Inherits="Forms_frmOrderEntryOld" Title="SAMS: Order/Invoice Step 2" %>
-<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
-
 <asp:Content ID="Content1" runat="server" ContentPlaceHolderID="cphPage">
 <style>
 element.style {

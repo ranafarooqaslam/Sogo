@@ -32,6 +32,7 @@ public partial class Forms_frmOrderEntry : System.Web.UI.Page
     {
         if (!Page.IsPostBack)
         {
+            hfOldRecord.Value = "0";
             foreach (ListItem li in RblPayMode.Items)
             {
                 li.Selected = false;
@@ -68,10 +69,12 @@ public partial class Forms_frmOrderEntry : System.Web.UI.Page
             this.Session.Remove("Route");
             this.Session.Remove("SaleMan");
             ScriptManager.GetCurrent(Page).SetFocus(txtOutletCode);
+            Configuration.SystemCurrentDateTime = (DateTime)this.Session["CurrentWorkDate"];
+            txtFromdate.Text = Configuration.SystemCurrentDateTime.ToString("dd-MMM-yyyy");
             if (OrderNo == -1)
             {
                 btnSaveOrder.Text = "Save Invoice";
-
+                rowDate.Visible = Convert.ToBoolean(Session["CanEditOldSale"]);                                
             }
             else if (OrderNo == -2)
             {
@@ -159,6 +162,9 @@ public partial class Forms_frmOrderEntry : System.Web.UI.Page
     /// </summary>
     private void LoadPendingOrder()
     {
+        hfOldRecord.Value = "0";
+        Configuration.SystemCurrentDateTime = (DateTime)this.Session["CurrentWorkDate"];
+        txtFromdate.Text = Configuration.SystemCurrentDateTime.ToString("dd-MMM-yyyy");
         OrderEntryController or = new OrderEntryController();
         this.drpDocumentNo.Items.Clear();
         DataTable dtOrder = or.SelectPendingOrder(int.Parse(this.Session["DistributorId"].ToString()), int.Parse(this.Session["AreaId"].ToString()), Constants.IntNullValue, int.Parse(this.Session["OrderBookerId"].ToString()), int.Parse(this.Session["DeliveryManId"].ToString()), Constants.Order_Pending_Id, Constants.IntNullValue, int.Parse(this.Session["UserId"].ToString()), Convert.ToDateTime(this.Session["OrderDate"]));
@@ -2415,12 +2421,21 @@ public partial class Forms_frmOrderEntry : System.Web.UI.Page
                             }
                         }
                     }
-
+                    bool IsOldRecord = false;
+                    DateTime DocumentDate = DateTime.Parse(this.Session["OrderDate"].ToString());
+                    if (hfOldRecord.Value == "1")
+                    {
+                        IsOldRecord = true;
+                        DocumentDate = Convert.ToDateTime(txtFromdate.Text);
+                    }
                     bool IsValidInsert = mOrderController.Update_Invoice(Convert.ToInt64(drpDocumentNo.SelectedValue), int.Parse(this.Session["DistributorId"].ToString()), mTownId, long.Parse(this.Session["AreaId"].ToString()), 0, long.Parse(this.Session["CUSTOMER_ID"].ToString()), long.Parse(this.Session["CUSTOMER_ID"].ToString()), int.Parse(this.Session["OrderBookerId"].ToString()), int.Parse(this.Session["DeliveryManId"].ToString()), long.Parse(drpDocumentNo.SelectedValue.ToString()),
                     decimal.Parse(DC.chkNull_0(txtGrossAmount.Text)), decimal.Parse(DC.chkNull_0(numtxtTotalExtraDiscnt.Text)), decimal.Parse(DC.chkNull_0(numTxtTotalStndrdDiscnt.Text)), decimal.Parse(DC.chkNull_0(numTxtTotalGST.Text)), decimal.Parse(DC.chkNull_0(numTxtTotlAmnt.Text)), 0, int.Parse(RblPayMode.SelectedValue.ToString()),
-                    PurchaseSKU, dtFreeSKU, int.Parse(this.Session["UserId"].ToString()), decimal.Parse(DC.chkNull_0(txtCashReceived.Text)), DateTime.Parse(this.Session["OrderDate"].ToString()), decimal.Parse(DC.chkNull_0(numTxtTotalTST.Text)), decimal.Parse(DC.chkNull_0(numtxtUnClaimabledist.Text)),txtRemarks.Text,Convert.ToInt32(drpAssignedDistributor.SelectedValue));
+                    PurchaseSKU, dtFreeSKU, int.Parse(this.Session["UserId"].ToString()), decimal.Parse(DC.chkNull_0(txtCashReceived.Text)), DocumentDate , decimal.Parse(DC.chkNull_0(numTxtTotalTST.Text)), decimal.Parse(DC.chkNull_0(numtxtUnClaimabledist.Text)),txtRemarks.Text,Convert.ToInt32(drpAssignedDistributor.SelectedValue),IsOldRecord);
                     if (IsValidInsert)
                     {
+                        hfOldRecord.Value = "0";
+                        Configuration.SystemCurrentDateTime = (DateTime)this.Session["CurrentWorkDate"];
+                        txtFromdate.Text = Configuration.SystemCurrentDateTime.ToString("dd-MMM-yyyy");
                         btnSaveOrder.Text = "Save Invoice";
                         this.LoadCustomerData();
                         this.LoadPendingOrder();
@@ -2541,6 +2556,20 @@ public partial class Forms_frmOrderEntry : System.Web.UI.Page
             txtUnitRate.Text = GrdPurchase.Rows[index].Cells[5].Text;
             txtStock.Text = (stock / Convert.ToInt32(GrdPurchase.Rows[index].Cells[13].Text)).ToString() + "-" + (stock % Convert.ToInt32(GrdPurchase.Rows[index].Cells[13].Text)).ToString();
             btnSave.Text = "Update SKU";
+        }
+    }
+
+    protected void btnLoad_Click(object sender, EventArgs e)
+    {
+        hfOldRecord.Value = "1";
+        OrderEntryController or = new OrderEntryController();
+        this.drpDocumentNo.Items.Clear();
+        DataTable dtOrder = or.SelectPendingOrder(int.Parse(this.Session["DistributorId"].ToString()), int.Parse(this.Session["AreaId"].ToString()), Constants.IntNullValue, int.Parse(this.Session["OrderBookerId"].ToString()), int.Parse(this.Session["DeliveryManId"].ToString()), Constants.Order_Pending_Id, Constants.IntNullValue, int.Parse(this.Session["UserId"].ToString()), Convert.ToDateTime(txtFromdate.Text));
+        clsWebFormUtil.FillDropDownList(this.drpDocumentNo, dtOrder, "SALE_INVOICE_ID", "SALE_INVOICE_ID2");
+        this.Session.Add("dtOrder", dtOrder);
+        if (drpDocumentNo.Items.Count > 0)
+        {
+            drpDocumentNo_SelectedIndexChanged(null, null);
         }
     }
 }

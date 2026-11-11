@@ -2381,7 +2381,8 @@ namespace SAMSBusinessLayer.Classes
             return true;
         }
         public bool Update_Invoice(long p_SALE_INVOICE_ID, int p_Distributor_id, int p_TOWN_ID, long p_AREA_ID, int p_PRINCIPAL_ID, long p_SOLD_TO, long p_SHIP_TO, int p_ORDERBOOKER_ID, int p_DELIVERYMAN_ID, long p_Orderid,
-         decimal p_TOTAL_AMOUNT, decimal p_EXTRA_DISCOUNT_AMOUNT, decimal p_STANDARD_DISCOUNT_AMOUNT, decimal p_GST_AMOUNT, decimal p_TOTAL_NET_AMOUNT, decimal p_SCHEME_AMOUNT, int InvoiceTypeId, DataTable dtOrderDetail, DataTable dtFreeSKU, int p_UserId, decimal p_CashReceived, DateTime p_DocumentDate, decimal p_TSTAmount, decimal p_SEDAmount, string p_REMARKS, int p_Assigned_Location_ID)
+         decimal p_TOTAL_AMOUNT, decimal p_EXTRA_DISCOUNT_AMOUNT, decimal p_STANDARD_DISCOUNT_AMOUNT, decimal p_GST_AMOUNT, decimal p_TOTAL_NET_AMOUNT, decimal p_SCHEME_AMOUNT, int InvoiceTypeId, DataTable dtOrderDetail, 
+         DataTable dtFreeSKU, int p_UserId, decimal p_CashReceived, DateTime p_DocumentDate, decimal p_TSTAmount, decimal p_SEDAmount, string p_REMARKS, int p_Assigned_Location_ID,bool p_IsOldRecord)
         {
             Configuration.GetAccountHead();
             LedgerController LController2 = new LedgerController();
@@ -2396,7 +2397,7 @@ namespace SAMSBusinessLayer.Classes
                 mConnection.Open();
                 mTransaction = ProviderFactory.GetTransaction(mConnection);
 
-                spUpdateSALE_INVOICE_MASTER mISom = new spUpdateSALE_INVOICE_MASTER();
+                spUpdateSALE_INVOICE_MASTERNew mISom = new spUpdateSALE_INVOICE_MASTERNew();
                 mISom.Connection = mConnection;
                 mISom.Transaction = mTransaction;
 
@@ -2434,6 +2435,7 @@ namespace SAMSBusinessLayer.Classes
                     mISom.LEGEND_ID = InvoiceTypeId;
                     mISom.IS_DELETED = false;
                     mISom.SALE_INVOICE_ID = p_SALE_INVOICE_ID;
+                    mISom.IsOldRecord = p_IsOldRecord;
                     mISom.ExecuteQuery();
 
                     //----------------Insert Invoice Remarks-------------       
@@ -2494,7 +2496,14 @@ namespace SAMSBusinessLayer.Classes
                         UspProcessStockRegister mStockUpdate = new UspProcessStockRegister();
                         mStockUpdate.Connection = mConnection;
                         mStockUpdate.Transaction = mTransaction;
-                        mStockUpdate.TYPE_ID = Constants.Document_Invoice;
+                        if (p_IsOldRecord)
+                        {
+                            mStockUpdate.TYPE_ID = 10;
+                        }
+                        else
+                        {
+                            mStockUpdate.TYPE_ID = Constants.Document_Invoice;
+                        }
                         mStockUpdate.DISTRIBUTOR_ID = p_Assigned_Location_ID;
                         mStockUpdate.STOCK_DATE = p_DocumentDate;
                         mStockUpdate.SKU_ID = mSaleOrderDetail.SKU_ID;

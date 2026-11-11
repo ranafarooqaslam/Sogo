@@ -117,6 +117,7 @@
     </Compile>
     <Compile Include="InputClasses\spDeleteD_TO_D_ASSIGNMENT.cs" />
     <Compile Include="InputClasses\spInsertD_TO_D_ASSIGNMENT.cs" />
+    <Compile Include="InputClasses\spUpdateSALE_INVOICE_MASTERNew.cs" />
     <Compile Include="InputClasses\UspDELETEBankCashDetailNew.cs" />
     <Compile Include="InputClasses\uspGetPaymentVoucher2.cs" />
     <Compile Include="InputClasses\UspMakeDailyAdvanceSaleJVForPost.cs" />

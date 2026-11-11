@@ -1,8 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/Forms/PageMaster.master" AutoEventWireup="true"
     CodeFile="frmOrderEntry.aspx.cs" Inherits="Forms_frmOrderEntry" Title="SAMS: Order/Invoice Step 2" %>
-
-<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
-
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" runat="server" ContentPlaceHolderID="cphPage">
     <style>
         element.style {
@@ -165,6 +163,26 @@
                             <ContentTemplate>
                                 <table>
                                     <tbody>
+                                        <tr runat="server" id="rowDate" visible="false">
+                                            <td valign="top" align="left">
+                                                <strong>
+                                                    <asp:Label ID="Label16" runat="server" Width="74px" Text="Date"></asp:Label></strong>
+                                            </td>
+                                            <td style="height: 25px" align="left">
+                                                <asp:TextBox id="txtFromdate" runat="server" Width="204px" CssClass="txtBox" MaxLength="1"></asp:TextBox></td>
+                                            <td style="height: 25px">
+                                                <asp:ImageButton ID="ibtnStartDate" runat="server" ImageUrl="~/App_Themes/Granite/Images/date.gif"
+                                                    Width="16px" />
+                                                <cc1:CalendarExtender ID="CEStartDate" runat="server" Format="dd-MMM-yyyy" PopupButtonID="ibtnStartDate"
+                                                    TargetControlID="txtFromdate">
+                                                </cc1:CalendarExtender>
+                                            </td>
+                                            <td>
+                                                <asp:Button ID="btnLoad" runat="server" Font-Size="8pt" OnClick="btnLoad_Click" Text="Load Old Data"
+                                                    Width="100%" AccessKey="A" CssClass="Button" />
+                                                <asp:HiddenField ID="hfOldRecord" Value="0" runat="server" />
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td valign="top" align="left">
                                                 <strong>
