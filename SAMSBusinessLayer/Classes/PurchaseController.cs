@@ -160,6 +160,36 @@ namespace SAMSBusinessLayer.Classes
 
         }
 
+        public DataTable SelectPurchaseDocumentNo(int p_TYPE_ID, int p_DISTRIBUTOR_ID, DateTime P_DocumentDate, int p_Posting)
+        {
+            try
+            {
+                mConnection = ProviderFactory.GetConnection(Configuration.ConnectionString, EnumProviders.SQLClient);
+                mConnection.Open();
+                spSelectPURCHASE_MASTER mPurchaseMaster = new spSelectPURCHASE_MASTER();
+                mPurchaseMaster.Connection = mConnection;
+                mPurchaseMaster.DISTRIBUTOR_ID = p_DISTRIBUTOR_ID;
+                mPurchaseMaster.TYPE_ID = p_TYPE_ID;
+                mPurchaseMaster.DOCUMENT_DATE = P_DocumentDate;
+                mPurchaseMaster.POSTING = p_Posting;
+                DataTable dt = mPurchaseMaster.ExecuteTable();
+                return dt;
+            }
+            catch (Exception exp)
+            {
+                ExceptionPublisher.PublishException(exp);
+                return null;
+            }
+            finally
+            {
+                if (mConnection != null && mConnection.State == ConnectionState.Open)
+                {
+                    mConnection.Close();
+                }
+            }
+
+        }
+
         /// <summary>
         /// Gets Purchase, TranferOut, Purchase Return, TranferIn And Damage Document No
         /// </summary>
@@ -426,6 +456,111 @@ namespace SAMSBusinessLayer.Classes
                     mStockUpdate.Transaction = mTransaction;
                     mStockUpdate.PRINCIPAL_ID = p_Principal; 
                     mStockUpdate.TYPE_ID = mPurchaseMaster.TYPE_ID;
+                    mStockUpdate.DISTRIBUTOR_ID = mPurchaseMaster.DISTRIBUTOR_ID;
+                    mStockUpdate.STOCK_DATE = mPurchaseMaster.DOCUMENT_DATE;
+                    mStockUpdate.SKU_ID = mPurchaseDetail.SKU_ID;
+                    mStockUpdate.STOCK_QTY = mPurchaseDetail.QUANTITY;
+                    mStockUpdate.FREE_QTY = mPurchaseDetail.FREE_SKU;
+                    mStockUpdate.BATCHNO = mPurchaseDetail.BATCH_NO;
+                    mStockUpdate.ExecuteQuery();
+                }
+                mTransaction.Commit();
+                return true;
+            }
+            catch (Exception exp)
+            {
+                ExceptionPublisher.PublishException(exp);
+                mTransaction.Rollback();
+                return false;
+            }
+            finally
+            {
+                if (mConnection != null && mConnection.State == ConnectionState.Open)
+                {
+                    mConnection.Close();
+                }
+            }
+
+        }
+
+        public bool UpdatePurchaseDocument(long p_PURCHASE_MASTER_ID, int p_DISTRIBUTOR_ID, string p_ORDER_NUMBER, int p_TYPE_ID, DateTime p_DOCUMENT_DATE, int p_SOLD_TO, int p_SOLD_FROM, decimal p_TOTAL_AMOUNT, bool p_IS_DELETE, DataTable dtPurchaseDetail, int p_Posting, string p_BuiltyNo, int p_UserId, int p_Principal,bool p_IsOldRecord)
+        {
+            try
+            {
+                mConnection = ProviderFactory.GetConnection(Configuration.ConnectionString, EnumProviders.SQLClient);
+                mConnection.Open();
+                mTransaction = ProviderFactory.GetTransaction(mConnection);
+                spUpdatePURCHASE_MASTER mPurchaseMaster = new spUpdatePURCHASE_MASTER();
+                mPurchaseMaster.Connection = mConnection;
+                mPurchaseMaster.Transaction = mTransaction;
+                mPurchaseMaster.PURCHASE_MASTER_ID = p_PURCHASE_MASTER_ID;
+                mPurchaseMaster.DISTRIBUTOR_ID = p_DISTRIBUTOR_ID;
+                mPurchaseMaster.TYPE_ID = p_TYPE_ID;
+                mPurchaseMaster.ORDER_NUMBER = p_ORDER_NUMBER;
+                mPurchaseMaster.SOLD_FROM = p_SOLD_FROM;
+                mPurchaseMaster.DOCUMENT_DATE = p_DOCUMENT_DATE;
+                mPurchaseMaster.SOLD_TO = p_SOLD_TO;
+                mPurchaseMaster.TOTAL_AMOUNT = p_TOTAL_AMOUNT;
+                mPurchaseMaster.USER_ID = p_UserId;
+                mPurchaseMaster.LAST_UPDATE = DateTime.Now;
+                mPurchaseMaster.POSTING = p_Posting;
+                mPurchaseMaster.BUILTY_NO = p_BuiltyNo;
+                mPurchaseMaster.ExecuteQuery();
+
+                //Get Privouse Update Purchase Detail and Rollback
+                //LedgerController LController = new LedgerController();
+
+                //string VoucherNo = LController.SelectLedgerMaxDocumentId(Constants.Journal_Voucher, p_DISTRIBUTOR_ID);
+
+                DataTable dt = SelectPrivousePurchaseDetail(p_DISTRIBUTOR_ID, p_PURCHASE_MASTER_ID, mConnection, mTransaction);
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    UspUpdatePurchaseDetailStock mPurchaseStock = new UspUpdatePurchaseDetailStock();
+                    mPurchaseStock.Connection = mConnection;
+                    mPurchaseStock.Transaction = mTransaction;
+                    mPurchaseStock.TYPEID = p_TYPE_ID;
+                    mPurchaseStock.DISTRIBUTOR_ID = p_DISTRIBUTOR_ID;
+                    mPurchaseStock.PURCHASE_DETAIL_ID = long.Parse(dr["PURCHASE_DETAIL_ID"].ToString());
+                    mPurchaseStock.PURCHASE_MASTER_ID = p_PURCHASE_MASTER_ID;
+                    mPurchaseStock.BATCH_NO = dr["BATCH_NO"].ToString().Trim();
+                    mPurchaseStock.SKU_ID = int.Parse(dr["SKU_ID"].ToString());
+                    mPurchaseStock.IsOldRecord = p_IsOldRecord;
+                    mPurchaseStock.ExecuteQuery();
+                }
+
+                spInsertPURCHASE_DETAIL mPurchaseDetail = new spInsertPURCHASE_DETAIL();
+                mPurchaseDetail.Connection = mConnection;
+                mPurchaseDetail.Transaction = mTransaction;
+
+                foreach (DataRow dr in dtPurchaseDetail.Rows)
+                {
+
+                    //update stock;
+                    mPurchaseDetail.PURCHASE_MASTER_ID = mPurchaseMaster.PURCHASE_MASTER_ID;
+                    mPurchaseDetail.DISTRIBUTOR_ID = p_DISTRIBUTOR_ID;
+                    mPurchaseDetail.SKU_ID = int.Parse(dr["SKU_ID"].ToString());
+                    mPurchaseDetail.BATCH_NO = dr["BATCH_NO"].ToString();
+                    mPurchaseDetail.PRICE = decimal.Parse(dr["PRICE"].ToString());
+                    mPurchaseDetail.QUANTITY = ((Convert.ToInt32(dr["UNITS_IN_CASE"]) * (Convert.ToInt32(dr["QuantityCtn"]))) + Convert.ToInt32(dr["Quantity"]));
+                    mPurchaseDetail.FREE_SKU = int.Parse(dr["FREE_SKU"].ToString());
+                    mPurchaseDetail.AMOUNT = decimal.Parse(dr["AMOUNT"].ToString());
+                    mPurchaseDetail.TYPE_ID = mPurchaseMaster.TYPE_ID;
+                    mPurchaseDetail.TIME_STAMP = p_DOCUMENT_DATE;
+                    mPurchaseDetail.ExecuteQuery();
+
+                    UspProcessStockRegister mStockUpdate = new UspProcessStockRegister();
+                    mStockUpdate.Connection = mConnection;
+                    mStockUpdate.Transaction = mTransaction;
+                    mStockUpdate.PRINCIPAL_ID = p_Principal;
+                    if (p_IsOldRecord)
+                    {
+                        mStockUpdate.TYPE_ID = 11;
+                    }
+                    else
+                    {
+                        mStockUpdate.TYPE_ID = mPurchaseMaster.TYPE_ID;
+                    }
                     mStockUpdate.DISTRIBUTOR_ID = mPurchaseMaster.DISTRIBUTOR_ID;
                     mStockUpdate.STOCK_DATE = mPurchaseMaster.DOCUMENT_DATE;
                     mStockUpdate.SKU_ID = mPurchaseDetail.SKU_ID;

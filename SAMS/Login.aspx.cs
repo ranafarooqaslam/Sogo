@@ -47,6 +47,7 @@ public partial class Login : System.Web.UI.Page
                 this.Session.Add("RoleID", Convert.ToInt32(dt.Rows[0]["ROLE_ID"]));
                 this.Session.Add("UserInvoiceType", dt.Rows[0]["InvoiceType"].ToString());
                 this.Session.Add("CanEditOldSale", dt.Rows[0]["CanEditOldSale"]);
+                this.Session.Add("CanEditOldPurchase", dt.Rows[0]["CanEditOldPurchase"]);
                 LastClosedDay(Convert.ToInt32(dt.Rows[0]["USER_ID"]), Convert.ToInt32(dt.Rows[0]["DISTRIBUTOR_ID"]));
                 this.Session.Add("UserName2", dt.Rows[0]["USER_NAME"].ToString());
                 this.Session.Add("UserName", dt.Rows[0]["USER_DETAIL"].ToString());

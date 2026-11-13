@@ -25,6 +25,10 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
     {
         if (!Page.IsPostBack)
         {
+            hfOldRecord.Value = "0";
+            Configuration.SystemCurrentDateTime = (DateTime)this.Session["CurrentWorkDate"];
+            txtFromdate.Text = Configuration.SystemCurrentDateTime.ToString("dd-MMM-yyyy");
+            rowDate.Visible = Convert.ToBoolean(Session["CanEditOldPurchase"]);
             this.LoadPrincipal();
             this.LoadDistributor();
             this.LoadSKUDetail();
@@ -34,7 +38,7 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
             SAMSCommon.Classes.Configuration.SystemCurrentDateTime = (DateTime)this.Session["CurrentWorkDate"];
         }
     }
-    
+
     /// <summary>
     /// Creats Datatable For Document
     /// </summary>
@@ -52,8 +56,8 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
         PurchaseSKU.Columns.Add("FREE_SKU", typeof(int));
         PurchaseSKU.Columns.Add("AMOUNT", typeof(decimal));
         PurchaseSKU.Columns.Add("UNITS_IN_CASE", typeof(int));
-        this.Session.Add("PurchaseSKU", PurchaseSKU);  
-    
+        this.Session.Add("PurchaseSKU", PurchaseSKU);
+
     }
 
     /// <summary>
@@ -63,8 +67,10 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
     /// <param name="e">EventArgs</param>
     protected void DrpDocumentType_SelectedIndexChanged(object sender, EventArgs e)
     {
+        rowDate.Visible = false;
         if (DrpDocumentType.SelectedIndex == 0)
         {
+            rowDate.Visible = Convert.ToBoolean(Session["CanEditOldPurchase"]);
             lbltoLocation.Text = "Principal";
             lblfromLocation.Text = "Purchase For";
             drpDistributor.Enabled = true;
@@ -116,13 +122,13 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
             this.GetDocumentNo();
         }
     }
-    
+
     /// <summary>
     /// Gets Document Nos For Purchase, TranferOut, Purchase Return, TranferIn And Damage
     /// </summary>
     private void GetDocumentNo()
     {
-        drpDocumentNo.Items.Clear();   
+        drpDocumentNo.Items.Clear();
         DateTime MWorkDate = System.DateTime.Now;
         PurchaseController mPurchase = new PurchaseController();
         if (Session["RoleID"].ToString() == "3")
@@ -167,14 +173,14 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
             this.LoadSKUDetail();
         }
     }
-    
+
     /// <summary>
     /// Loads Principals To Principal Comb
     /// </summary>
     private void LoadPrincipal()
     {
         DataTable m_dt = PController.SelectDataPrice(Constants.IntNullValue, Constants.IntNullValue, Constants.IntNullValue, Constants.IntNullValue, Constants.IntNullValue, int.Parse(this.Session["UserId"].ToString()), Constants.IntNullValue, 0, DateTime.Parse(this.Session["CurrentWorkDate"].ToString()));
-        clsWebFormUtil.FillDropDownList(this.drpPrincipal, m_dt, 0, 1,true);
+        clsWebFormUtil.FillDropDownList(this.drpPrincipal, m_dt, 0, 1, true);
     }
 
     /// <summary>
@@ -186,7 +192,7 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
     {
         this.LoadSKUDetail();
     }
-    
+
     /// <summary>
     /// Loads Locations To Location From Combo
     /// </summary>
@@ -194,9 +200,9 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
     {
         DistributorController DController = new DistributorController();
         DataTable dt = DController.SelectDistributorInfo(Constants.IntNullValue, int.Parse(this.Session["UserId"].ToString()), int.Parse(this.Session["CompanyId"].ToString()));
-        clsWebFormUtil.FillDropDownList(this.drpDistributor, dt, 0, 2,true);
+        clsWebFormUtil.FillDropDownList(this.drpDistributor, dt, 0, 2, true);
     }
-    
+
     /// <summary>
     /// Loads Locations To Location To Combo
     /// </summary>
@@ -250,7 +256,7 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
             LoadGird();
         }
     }
-        
+
     /// <summary>
     /// Loads Document Detail Data To Document Detail Grid
     /// </summary>
@@ -300,7 +306,7 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
             this.Session.Add("Dtsku_Price", Dtsku_Price);
         }
     }
-    
+
     /// <summary>
     /// Enables/Disables Apply Free SKU TextBox
     /// </summary>
@@ -360,7 +366,7 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
                     }
                     else
                     {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "msg", "alert('  " + ddlSKU.SelectedItem.Text + " Current closing Stock is " + CurrentStock.ToString() + "');", true);                        
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "msg", "alert('  " + ddlSKU.SelectedItem.Text + " Current closing Stock is " + CurrentStock.ToString() + "');", true);
                         return;
                     }
                 }
@@ -389,7 +395,7 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
                 }
                 else
                 {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "msg", "alert('  " + ddlSKU.SelectedItem.Text + "Current closing Stock is " + CurrentStock.ToString() + "');", true);                    
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "msg", "alert('  " + ddlSKU.SelectedItem.Text + "Current closing Stock is " + CurrentStock.ToString() + "');", true);
                     return;
                 }
             }
@@ -482,7 +488,7 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
         this.ClearAll();
         txtDocumentNo.Text = "";
         txtBuiltyNo.Text = "";
-        txtDocumentNo.Text = ""; 
+        txtDocumentNo.Text = "";
     }
 
     /// <summary>
@@ -531,8 +537,15 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
             }
             else
             {
+                bool IsOldRecord = false;                
+                if (hfOldRecord.Value == "1")
+                {
+                    IsOldRecord = true;
+                    MWorkDate = Convert.ToDateTime(txtFromdate.Text);
+                }
+
                 bool mResult = mController.UpdatePurchaseDocument(int.Parse(drpDocumentNo.SelectedValue.ToString()), int.Parse(drpDistributor.SelectedValue.ToString()), txtDocumentNo.Text, int.Parse(DrpDocumentType.SelectedValue.ToString())
-                , MWorkDate, int.Parse(drpDistributor.SelectedValue.ToString()), int.Parse(drpPrincipal.SelectedValue.ToString()), mTotalAmount, false, dtPurchaseDetail, 0, txtBuiltyNo.Text, int.Parse(this.Session["UserId"].ToString()), int.Parse(drpPrincipal.SelectedValue.ToString()));
+                , MWorkDate, int.Parse(drpDistributor.SelectedValue.ToString()), int.Parse(drpPrincipal.SelectedValue.ToString()), mTotalAmount, false, dtPurchaseDetail, 0, txtBuiltyNo.Text, int.Parse(this.Session["UserId"].ToString()), int.Parse(drpPrincipal.SelectedValue.ToString()), IsOldRecord);
                 return mResult;
             }
         }
@@ -711,5 +724,19 @@ public partial class Forms_frmPurchaseEntry : System.Web.UI.Page
     protected void drpDistributor_SelectedIndexChanged(object sender, EventArgs e)
     {
         LoadSKUDetail();
+    }
+
+    protected void btnLoad_Click(object sender, EventArgs e)
+    {
+        hfOldRecord.Value = "1";
+        drpDocumentNo.Items.Clear();
+        DateTime MWorkDate = System.DateTime.Now;
+        PurchaseController mPurchase = new PurchaseController();
+        DataTable dt = mPurchase.SelectPurchaseDocumentNo(int.Parse(DrpDocumentType.SelectedValue.ToString()), Constants.IntNullValue, Convert.ToDateTime(txtFromdate.Text), 1);
+        clsWebFormUtil.FillDropDownList(this.drpDocumentNo, dt, 0, 0);
+        if (drpDocumentNo.Items.Count > 0)
+        {
+            drpDocumentNo_SelectedIndexChanged(null, null);
+        }
     }
 }
